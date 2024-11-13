@@ -141,7 +141,7 @@ bool bellman_ford(Grafo *g, int s) {
 
 	for (int i = 0; i < g->qtd_vertices - 1; i++) {
     	for (int u = 0; u < g->qtd_vertices; u++) {
-        	No *aux = g->vertices[u].lista_adjacencia; // i
+        	No *aux = g->vertices[u].lista_adjacencia;
        	
         	while (aux) {
             	relaxar(g, u, aux->vertice, aux->peso);
@@ -218,7 +218,7 @@ int main(void) {
    	 
     	while (fscanf(stdin, "%d %d %f", &u, &v, &peso) != EOF) {
         	inserir_aresta(g, eh_grafo_direcionado, u, v, peso);
-			printf("Aresta (%d,%d) com peso w = %f adicionada ao grafo.\n", u, v, peso);
+			printf("Aresta (%d,%d) com peso w(%d,%d) = %f adicionada ao grafo.\n", u, v, u, v, peso);
 		}
 		printf("\n");
 

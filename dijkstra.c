@@ -72,12 +72,12 @@ void desalocar_fila_prioridade(FilaPrioridade *Q) {
 }
 
 void trocar_vertices(FilaPrioridade *Q, Grafo *g, int i, int j) {
-    // Troca os ponteiros dos vértices nas posições i e j do heap
+    // Faz a troca dos ponteiros dos vértices nas posições i e j da heap
     Vertice *temp = Q->arr[i];
     Q->arr[i] = Q->arr[j];
     Q->arr[j] = temp;
     
-    // Calcula os índices dos vértices no array original do grafo
+    // Computa os índices dos vértices no array original do grafo
     int vertex_i = Q->arr[i] - g->vertices;
     int vertex_j = Q->arr[j] - g->vertices;
     
@@ -310,54 +310,49 @@ void dijkstra(Grafo *g, int s) {
 
 	inicializar_fonte_unica(g, s, Q, S);
 
-	printf("Estado inicial da heap:\n");
-	for (int i = 0; i < g->qtd_vertices; i++) {
-		printf("Q->arr[%d]->d = %f\n", i, Q->arr[i]->d);
-		printf("Q->arr[%d] = %p\n", i, Q->arr[i]);
-		printf("Q->arr[%d] - g->vertices = %ld\n", i, Q->arr[i] - g->vertices);
-	}
+	//printf("Estado inicial da heap:\n");
+	//for (int i = 0; i < g->qtd_vertices; i++) {
+	//	printf("Q->arr[%d]->d = %f\n", i, Q->arr[i]->d);
+	//	printf("Q->arr[%d] = %p\n", i, Q->arr[i]);
+	//	printf("Q->arr[%d] - g->vertices = %ld\n", i, Q->arr[i] - g->vertices);
+	//}
 
-    printf("\nExecutando Dijkstra a partir do vértice fonte s = %d\n\n", s);
+    printf("\nRodando o Dijkstra a partir do vértice fonte s = %d\n\n", s);
 
     while (Q->m > 0) {
-
-		printf("Estado da heap antes da extração:\n");
-		for (int i = 0; i < g->qtd_vertices; i++) {
-			printf("Q->arr[%d] - g->vertices = %ld\n", i, Q->arr[i] - g->vertices);
-			printf("Q->arr[%d]->d = %f\n", i, Q->arr[i]->d);
+		//printf("Estado da heap antes da extração:\n");
+		//for (int i = 0; i < g->qtd_vertices; i++) {
+			//printf("Q->arr[%d] - g->vertices = %ld\n", i, Q->arr[i] - g->vertices);
+			//printf("Q->arr[%d]->d = %f\n", i, Q->arr[i]->d);
 			//printf("Q->arr[%d] = %p\n", i, Q->arr[i]);
-		}
+		//}
+
 		min_heapify(Q, g, 0);
-        // Extrai vértice com menor estimativa
         Vertice *u_vertice = extrair_minimo(Q, g);
 
-        // Encontra o índice do vértice extraído
         int u = u_vertice - g->vertices;
-        S[u] = true; // Marca como processado
+        S[u] = true;
         
-        printf("Vértice %d extraído da fila. Estimativa atual: %f\n", u, u_vertice->d);
+        printf("Vértice %d extraído da fila. Estimativa d atual: %f\n", u, u_vertice->d);
+		printf("Vertice %d marcado como processado, ou seja, agora S[%d] = %d.\n", u, u, S[u]);
 
-        printf("Estado da heap após a extração:\n");
-		for (int i = 0; i < g->qtd_vertices; i++) {
-			printf("Q->arr[%d] - g->vertices = %ld\n", i, Q->arr[i] - g->vertices);
-			printf("Q->arr[%d]->d = %f\n", i, Q->arr[i]->d);
+        //printf("Estado da heap após a extração:\n");
+		//for (int i = 0; i < g->qtd_vertices; i++) {
+			//printf("Q->arr[%d] - g->vertices = %ld\n", i, Q->arr[i] - g->vertices);
+			//printf("Q->arr[%d]->d = %f\n", i, Q->arr[i]->d);
 			//printf("Q->arr[%d] = %p\n", i, Q->arr[i]);
-		}
+		//}
 
-
-        // Para cada vizinho v de u
         No *adj = g->vertices[u].lista_adjacencia;
         while (adj) {
             int v = adj->vertice;
-            if (!S[v]) { // Se v ainda não foi processado
+            if (!S[v]) { // v ainda não fi processado
                 printf("\nProcessando aresta (%d,%d):\n", u, v);
                 relaxar(g, Q, u, v, adj->peso);
 				diminuir_chave(Q, g, v, g->vertices[v].d);
             }
             adj = adj->proximo_no;
         }
-        //printf("\nEstado atual do grafo após processar vértice %d:\n", u);
-		//exibir_resumo_grafo(g);
         printf("\n");
     }
 
@@ -374,7 +369,7 @@ int main(void) {
    	 
     	while (fscanf(stdin, "%d %d %f", &u, &v, &peso) != EOF) {
         	inserir_aresta(g, eh_grafo_direcionado, u, v, peso);
-			printf("Aresta (%d,%d) com peso w = %f adicionada ao grafo.\n", u, v, peso);
+			printf("Aresta (%d,%d) com peso w(%d,%d) = %f adicionada ao grafo.\n", u, v, u, v, peso);
 		}
 		printf("\n");
 
