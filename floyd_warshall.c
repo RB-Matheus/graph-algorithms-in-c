@@ -78,11 +78,11 @@ void destruir_grafo(Grafo *g) {
 void inserir_aresta(Grafo *g, int eh_grafo_direcionado, int u, int v, double peso) {
     if (g && g->W && g->W[u] && g->Pi && g->Pi[u]) {
         g->W[u][v] = peso;
-        g->Pi[u][v] = u;    // <====================================================
+        g->Pi[u][v] = u;
 
         if (!eh_grafo_direcionado) {
             g->W[v][u] = peso;
-            g->Pi[v][u] = v;        // <====================================================
+            g->Pi[v][u] = v;
         }
     }
 }
@@ -94,7 +94,7 @@ void exibir_grafo(Grafo *g) {
         
         printf("    ");
         for (int j = 0; j < g->qtd_vertices; j++)
-            printf(" %8d ", j);
+            printf(" %9d ", j);
         printf("\n");
 
 
@@ -102,9 +102,9 @@ void exibir_grafo(Grafo *g) {
             printf("%2d |", i);
             for (int j = 0; j < g->qtd_vertices; j++) {
                 if (g->W[i][j] == DBL_MAX) 
-                    printf(" %8s ", "INF");
+                    printf(" %9s ", "INF");
                 else
-                    printf(" %8lf ", g->W[i][j]);
+                    printf(" %9lf ", g->W[i][j]);
             }
             printf("\n");
         }
@@ -143,6 +143,17 @@ void floyd_warshall(Grafo *g) {
     }
 }
 
+// FAz a reconstrução do caminho mais curto entre dois vértices, com origem i e destino j, com a matriz Pi
+void exibir_caminho_mais_curto_entre_todos_pares(Grafo *g, int i, int j) { // é o "print_all_pairs_shortest_path" do livro
+    if (i == j)
+        printf("%d ", i);
+    else if (g->Pi[i][j] == -1)	
+        printf("Não existe caminho de %d a %d.\n", i, j);
+    else 			
+        exibir_caminho_mais_curto_entre_todos_pares(g, i, g->Pi[i][j]);
+    printf("%d ", j);
+}
+
 int main(void) {
     int u, v, qtd_vertices, eh_grafo_direcionado;
     double peso;
@@ -160,6 +171,8 @@ int main(void) {
     exibir_grafo(g);
     floyd_warshall(g);
     exibir_grafo(g);
+    exibir_caminho_mais_curto_entre_todos_pares(g, 0, 1);
+    printf("\n");
     destruir_grafo(g);
 
     return EXIT_SUCCESS;
