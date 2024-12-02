@@ -131,27 +131,43 @@ void exibir_grafo(Grafo *g) {
 }
 
 void floyd_warshall(Grafo *g) {
+    printf("Algoritmo de Floyd-Warshall prestes a iniciar...\n");
     for (int k = 0; k < g->qtd_vertices; k++) {
+        printf("[k = %d]\n", k);
         for (int i = 0; i < g->qtd_vertices; i++) {
             for (int j = 0; j < g->qtd_vertices; j++) {
                 if (g->W[i][k] + g->W[k][j] < g->W[i][j]) {
+                    printf("W[%d][%d] + W[%d][%d] < W[%d][%d]\n", i, k, k, j, i, j);
                     g->Pi[i][j] = g->Pi[k][j];
+                    printf("Pi[%d][%d] = Pi[%d][%d]\n", i, j, k, j);
                     g->W[i][j] = g->W[i][k] + g->W[k][j];
+                    printf("W[%d][%d] = W[%d][%d] + W[%d][%d]\n", i, j, i, k, k, j);
                 }
             }
         }
+        printf("\n");
     }
 }
 
 // FAz a reconstrução do caminho mais curto entre dois vértices, com origem i e destino j, com a matriz Pi
 void exibir_caminho_mais_curto_entre_todos_pares(Grafo *g, int i, int j) { // é o "print_all_pairs_shortest_path" do livro
     if (i == j)
-        printf("%d ", i);
+        printf("[%d] ", i);
     else if (g->Pi[i][j] == -1)	
         printf("Não existe caminho de %d a %d.\n", i, j);
     else 			
         exibir_caminho_mais_curto_entre_todos_pares(g, i, g->Pi[i][j]);
-    printf("%d ", j);
+    printf("~> %d ", j);
+}
+
+void exibir_todos_caminhos_minimos(Grafo *g) {
+    printf("\nVértice de partida    Vértice de destino    Caminho mínimo");    
+    for (int i = 0; i < g->qtd_vertices; i++) {
+        for(int j = 0; j < g->qtd_vertices; j++) {
+            printf("\n%10d %20d             ", i, j);
+            exibir_caminho_mais_curto_entre_todos_pares(g, i, j);
+        }
+    }
 }
 
 int main(void) {
@@ -171,7 +187,7 @@ int main(void) {
     exibir_grafo(g);
     floyd_warshall(g);
     exibir_grafo(g);
-    exibir_caminho_mais_curto_entre_todos_pares(g, 0, 1);
+    exibir_todos_caminhos_minimos(g);
     printf("\n");
     destruir_grafo(g);
 
